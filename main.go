@@ -94,7 +94,7 @@ func main() {
 		return
 	}
 
-	fmt.Println("Usage: service_sample [OPTION]")
+	fmt.Println("Usage: go_example_service [OPTION]")
 	fmt.Println("  install  : install serve")
 	fmt.Println("  uninstall: uninstall service")
 	fmt.Println("  start    : start service program")
