@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -16,11 +15,11 @@ type exarvice struct {
 	exit chan struct{}
 }
 
-func (e *exarvice) Run() error {
+func (e *exarvice) run() error {
 
 	logger.Info("Exarvice Start !!!")
 
-	ticker := time.NewTicker(5 * time.Second)
+	ticker := time.NewTicker(1 * time.Second)
 	for {
 		select {
 		case tm := <-ticker.C:
@@ -41,7 +40,7 @@ func (e *exarvice) Start(s service.Service) error {
 	}
 	e.exit = make(chan struct{})
 
-	go e.Run()
+	go e.run()
 	return nil
 }
 
@@ -72,20 +71,8 @@ func main() {
 	}
 
 	if len(os.Args) > 1 {
-		switch os.Args[1] {
-		case "install":
-			err = s.Install()
-		case "uninstall":
-			err = s.Uninstall()
-		case "start":
-			err = s.Start()
-		case "stop":
-			err = s.Stop()
-		case "run":
-			err = s.Run()
-		default:
-			err = errors.New("invalid argument")
-		}
+
+		err = service.Control(s, os.Args[1])
 		if err != nil {
 			fmt.Printf("Failed (%s) : %s\n", os.Args[1], err)
 			return
@@ -94,10 +81,6 @@ func main() {
 		return
 	}
 
-	fmt.Println("Usage: go_example_service [OPTION]")
-	fmt.Println("  install  : install serve")
-	fmt.Println("  uninstall: uninstall service")
-	fmt.Println("  start    : start service program")
-	fmt.Println("  stop     : stop service program")
-	fmt.Println("  run      : run in terminal")
+	// run in terminal
+	s.Run()
 }
